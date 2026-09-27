@@ -1,0 +1,21 @@
+:root {
+  --color-primary: #2563eb;
+  --color-primary-light: #60a5fa;
+  --color-primary-soft: #dbeafe;
+
+  --color-bg: #f0f9ff;
+  --color-surface: #ffffff;
+  --color-surface-soft: #eff6ff;
+
+  --color-text: #0f172a;
+  --color-text-muted: #64748b;
+
+  --color-border: #bfdbfe;
+
+  --shadow-soft: 0 8px 24px rgba(37, 99, 235, 0.12);
+
+  --bottom-nav-height: 68px;
+
+  --page-max-width-mobile: 480px;
+  --page-max-width-desktop: 1120px;
+}
