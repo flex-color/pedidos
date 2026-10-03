@@ -1,16 +1,35 @@
-const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL ||
-  "http://localhost:8080";
+const configuredApiBaseUrl =
+  import.meta.env.VITE_API_BASE_URL?.trim();
+
+export const API_BASE_URL =
+  configuredApiBaseUrl ||
+  (import.meta.env.DEV
+    ? "http://localhost:8080"
+    : "");
+
+if (!API_BASE_URL) {
+  throw new Error(
+    "Falta configurar VITE_API_BASE_URL para producción"
+  );
+}
 
 let csrfData = null;
 
 function isMutationMethod(method) {
-  return [
-    "POST",
-    "PUT",
-    "PATCH",
-    "DELETE",
-  ].includes(method.toUpperCase());
+  return ["POST", "PUT", "PATCH", "DELETE"].includes(
+    method.toUpperCase()
+  );
+}
+
+function notifyUnauthorized(path) {
+  if (
+    path !== "/api/auth/login" &&
+    path !== "/api/auth/me"
+  ) {
+    window.dispatchEvent(
+      new CustomEvent("auth:unauthorized")
+    );
+  }
 }
 
 async function getCsrfToken() {
@@ -33,16 +52,34 @@ async function getCsrfToken() {
   }
 
   csrfData = await response.json();
-
   return csrfData;
+}
+
+async function readErrorMessage(
+  response,
+  fallback = "Error en la solicitud"
+) {
+  const contentType =
+    response.headers.get("content-type") || "";
+
+  try {
+    if (contentType.includes("application/json")) {
+      const data = await response.json();
+      return data?.message || data?.error || fallback;
+    }
+
+    const text = await response.text();
+    return text || fallback;
+  } catch {
+    return fallback;
+  }
 }
 
 export async function apiRequest(
   path,
   options = {}
 ) {
-  const method =
-    options.method || "GET";
+  const method = options.method || "GET";
 
   let csrfHeaders = {};
 
@@ -50,8 +87,7 @@ export async function apiRequest(
     isMutationMethod(method) &&
     path !== "/api/auth/login"
   ) {
-    const csrf =
-      await getCsrfToken();
+    const csrf = await getCsrfToken();
 
     csrfHeaders = {
       [csrf.headerName || "X-XSRF-TOKEN"]:
@@ -67,9 +103,9 @@ export async function apiRequest(
     ...(options.headers || {}),
   };
 
-  if (!esFormData) {
+  if (!esFormData && options.body != null) {
     headers["Content-Type"] =
-      "application/json";
+      headers["Content-Type"] || "application/json";
   }
 
   const response = await fetch(
@@ -82,37 +118,35 @@ export async function apiRequest(
     }
   );
 
-  let data = null;
-
-  const contentType =
-    response.headers.get(
-      "content-type"
-    );
-
-  if (
-    contentType &&
-    contentType.includes(
-      "application/json"
-    )
-  ) {
-    data = await response.json();
-  }
-
   if (!response.ok) {
-    const message =
-      data?.message ||
-      data?.error ||
-      "Error en la solicitud";
+    if (response.status === 401) {
+      notifyUnauthorized(path);
+    }
 
+    const message = await readErrorMessage(
+      response
+    );
     throw new Error(message);
   }
 
-  return data;
+  if (response.status === 204) {
+    return null;
+  }
+
+  const contentType =
+    response.headers.get("content-type") || "";
+
+  if (contentType.includes("application/json")) {
+    return response.json();
+  }
+
+  return null;
 }
 
 export async function apiDownload(
   path,
-  nombreArchivo
+  nombreArchivo,
+  mensajeError = "No se pudo descargar el archivo."
 ) {
   const response = await fetch(
     `${API_BASE_URL}${path}`,
@@ -123,34 +157,28 @@ export async function apiDownload(
   );
 
   if (!response.ok) {
-    let message = "No se pudo descargar el archivo.";
-
-    const contentType =
-      response.headers.get("content-type");
-
-    if (
-      contentType &&
-      contentType.includes("application/json")
-    ) {
-      const data = await response.json();
-      message =
-        data?.message ||
-        data?.error ||
-        message;
+    if (response.status === 401) {
+      notifyUnauthorized(path);
     }
 
+    const message = await readErrorMessage(
+      response,
+      mensajeError
+    );
     throw new Error(message);
   }
 
   const blob = await response.blob();
   const url = URL.createObjectURL(blob);
 
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = nombreArchivo;
-  document.body.appendChild(link);
-  link.click();
-  link.remove();
-
-  URL.revokeObjectURL(url);
+  try {
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = nombreArchivo;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+  } finally {
+    URL.revokeObjectURL(url);
+  }
 }

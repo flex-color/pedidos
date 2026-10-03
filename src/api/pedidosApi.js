@@ -1,7 +1,7 @@
-import { apiRequest } from "./apiClient";
-
-const API_BASE_URL =
-  import.meta.env.VITE_API_BASE_URL || "http://localhost:8080";
+import {
+  apiDownload,
+  apiRequest,
+} from "./apiClient";
 
 /* =========================================================
    PEDIDOS
@@ -72,28 +72,10 @@ export function guardarControlLineaRequest({ pedidoId, insumos }) {
    TRILAY
    ========================================================= */
 
-export async function getPedidosPendientesTrilayRequest() {
-  const response = await fetch(
-    `${API_BASE_URL}/api/pedidos/pendientes-trilay`,
-    {
-      method: "GET",
-      credentials: "include",
-    }
-  );
-
-  if (!response.ok) {
-    let detalle = "";
-    try {
-      detalle = await response.text();
-    } catch {
-      detalle = "";
-    }
-    throw new Error(
-      detalle || "No se pudieron cargar los pedidos pendientes de Trilay"
-    );
-  }
-
-  return response.json();
+export function getPedidosPendientesTrilayRequest() {
+  return apiRequest("/api/pedidos/pendientes-trilay", {
+    method: "GET",
+  });
 }
 
 export function marcarPedidoCargaTrilayRequest(pedidoId) {
@@ -106,29 +88,7 @@ export function marcarPedidoCargaTrilayRequest(pedidoId) {
    EXPORTACIONES
    ========================================================= */
 
-async function descargarExcel(response, nombreArchivo, mensajeError) {
-  if (!response.ok) {
-    let detalle = "";
-    try {
-      detalle = await response.text();
-    } catch {
-      detalle = "";
-    }
-    throw new Error(detalle || mensajeError);
-  }
-
-  const blob = await response.blob();
-  const url = window.URL.createObjectURL(blob);
-  const link = document.createElement("a");
-  link.href = url;
-  link.download = nombreArchivo;
-  document.body.appendChild(link);
-  link.click();
-  link.remove();
-  window.URL.revokeObjectURL(url);
-}
-
-export async function exportarTodosLosPedidosRequest({
+export function exportarTodosLosPedidosRequest({
   desde = null,
   hasta = null,
 } = {}) {
@@ -140,61 +100,44 @@ export async function exportarTodosLosPedidosRequest({
   }
 
   const query = params.toString();
-  const url = query
-    ? `${API_BASE_URL}/api/pedidos/export/todos?${query}`
-    : `${API_BASE_URL}/api/pedidos/export/todos`;
-
-  const response = await fetch(url, {
-    method: "GET",
-    credentials: "include",
-  });
+  const path = query
+    ? `/api/pedidos/export/todos?${query}`
+    : "/api/pedidos/export/todos";
 
   const nombreArchivo =
     desde && hasta
       ? `pedidos-${desde}-a-${hasta}.xlsx`
       : "pedidos-todos.xlsx";
 
-  await descargarExcel(
-    response,
+  return apiDownload(
+    path,
     nombreArchivo,
     "No se pudo exportar el reporte general de pedidos"
   );
 }
 
-export async function exportarPendientesTrilayRequest() {
-  const response = await fetch(
-    `${API_BASE_URL}/api/pedidos/pendientes-trilay/export`,
-    {
-      method: "GET",
-      credentials: "include",
-    }
-  );
-
-  await descargarExcel(
-    response,
+export function exportarPendientesTrilayRequest() {
+  return apiDownload(
+    "/api/pedidos/pendientes-trilay/export",
     "pedidos-pendientes-trilay.xlsx",
     "No se pudo exportar el Excel de pendientes Trilay"
   );
 }
 
-export async function exportarPedidosSeleccionadosRequest(pedidoIds) {
+export function exportarPedidosSeleccionadosRequest(pedidoIds) {
   if (!Array.isArray(pedidoIds) || pedidoIds.length === 0) {
-    throw new Error("No hay pedidos seleccionados para exportar");
+    throw new Error(
+      "No hay pedidos seleccionados para exportar"
+    );
   }
 
   const params = new URLSearchParams();
-  pedidoIds.forEach((id) => params.append("ids", id));
-
-  const response = await fetch(
-    `${API_BASE_URL}/api/pedidos/export/seleccionados?${params.toString()}`,
-    {
-      method: "GET",
-      credentials: "include",
-    }
+  pedidoIds.forEach((id) =>
+    params.append("ids", id)
   );
 
-  await descargarExcel(
-    response,
+  return apiDownload(
+    `/api/pedidos/export/seleccionados?${params.toString()}`,
     "pedidos-seleccionados-trilay.xlsx",
     "No se pudo exportar el Excel de pedidos seleccionados"
   );
@@ -214,10 +157,16 @@ export function getHistorialPedidosRequest({
   params.set("size", size);
 
   if (cargaTrilay !== null) {
-    params.set("cargaTrilay", String(cargaTrilay));
+    params.set(
+      "cargaTrilay",
+      String(cargaTrilay)
+    );
   }
 
-  return apiRequest(`/api/pedidos/historial?${params.toString()}`, {
-    method: "GET",
-  });
+  return apiRequest(
+    `/api/pedidos/historial?${params.toString()}`,
+    {
+      method: "GET",
+    }
+  );
 }
