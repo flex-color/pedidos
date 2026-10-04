@@ -13,8 +13,6 @@ if (!API_BASE_URL) {
   );
 }
 
-let csrfData = null;
-
 function isMutationMethod(method) {
   return ["POST", "PUT", "PATCH", "DELETE"].includes(
     method.toUpperCase()
@@ -33,15 +31,12 @@ function notifyUnauthorized(path) {
 }
 
 async function getCsrfToken() {
-  if (csrfData?.token) {
-    return csrfData;
-  }
-
   const response = await fetch(
     `${API_BASE_URL}/api/auth/csrf`,
     {
       method: "GET",
       credentials: "include",
+      cache: "no-store",
     }
   );
 
@@ -51,8 +46,7 @@ async function getCsrfToken() {
     );
   }
 
-  csrfData = await response.json();
-  return csrfData;
+  return response.json();
 }
 
 async function readErrorMessage(
