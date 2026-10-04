@@ -1,7 +1,5 @@
 :root {
-  --color-primary: #2563eb;
-  --color-primary-light: #60a5fa;
-  --color-primary-soft: #dbeafe;
+
 
   --color-bg: #f0f9ff;
   --color-surface: #ffffff;
@@ -18,4 +16,8 @@
 
   --page-max-width-mobile: 480px;
   --page-max-width-desktop: 1120px;
+  --color-primary: #7A1F32;
+  --color-primary-hover: #641829;
+  --color-primary-light: #F5E9EC;
+  --color-primary-border: #D8AAB4;
 }

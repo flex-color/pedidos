@@ -77,3 +77,8 @@ button {
     padding-right: 40px;
   }
 }
+@media (max-width: 760px) {
+  body {
+    padding: 8px;
+  }
+}

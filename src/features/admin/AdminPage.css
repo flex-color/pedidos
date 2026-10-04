@@ -636,8 +636,8 @@
 .admin-page .admin-panel__create,
 .admin-page .admin-search-row__primary,
 .admin-page .admin-modal__primary {
-  background: #2563eb !important;
-  border: 1px solid #2563eb !important;
+  background: #7A1F32 !important;
+  border: 1px solid #7A1F32 !important;
   color: #ffffff !important;
   box-shadow: none !important;
 }
@@ -692,7 +692,7 @@
 }
 
 .admin-page .admin-tabs__item.is-active {
-  background: #2563eb !important;
+  background: #7A1F32 !important;
   color: #ffffff !important;
 }
 
@@ -781,10 +781,10 @@
 
 .admin-page .admin-search input:focus,
 .admin-page .admin-search select:focus {
-  border-color: #2563eb !important;
+  border-color: #7A1F32 !important;
   outline: 3px solid rgba(37, 99, 235, 0.18) !important;
   outline-offset: 2px !important;
-  box-shadow: 0 0 0 1px #2563eb !important;
+  box-shadow: 0 0 0 1px #7A1F32 !important;
 }
 
 .admin-page .admin-search input::placeholder {
@@ -797,12 +797,12 @@
 }
 
 .admin-bom-card {
-  border-left: 5px solid #2563eb !important;
+  border-left: 5px solid #7A1F32 !important;
 }
 
 .admin-bom-card__eyebrow {
   margin: 0 0 5px !important;
-  color: #2563eb !important;
+  color: #7A1F32 !important;
   font-size: 12px !important;
   font-weight: 900 !important;
   text-transform: uppercase;
