@@ -7,7 +7,7 @@ import "./AppLayout.css";
 
 export default function AppLayout() {
   const navigate = useNavigate();
-  const { usuario, setUsuario } = useAuth();
+  const { usuario, cerrarSesionLocal } = useAuth();
 
   async function handleLogout() {
     try {
@@ -15,7 +15,7 @@ export default function AppLayout() {
     } catch {
       // Igual cerramos la sesión local del frontend.
     } finally {
-      setUsuario(null);
+      cerrarSesionLocal();
       navigate(ROUTES.LOGIN, { replace: true });
     }
   }

@@ -41,6 +41,10 @@ async function getCsrfToken() {
   );
 
   if (!response.ok) {
+    if (response.status === 401) {
+      notifyUnauthorized("/api/auth/csrf");
+    }
+
     throw new Error(
       "No se pudo obtener el token CSRF"
     );

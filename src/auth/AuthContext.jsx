@@ -13,6 +13,11 @@ export function AuthProvider({ children }) {
   const [usuario, setUsuario] = useState(null);
   const [status, setStatus] = useState("checking");
 
+  function cerrarSesionLocal() {
+    setUsuario(null);
+    setStatus("unauthenticated");
+  }
+
   async function refrescarUsuario() {
     try {
       setStatus("checking");
@@ -21,8 +26,7 @@ export function AuthProvider({ children }) {
       setStatus("authenticated");
       return data;
     } catch (error) {
-      setUsuario(null);
-      setStatus("unauthenticated");
+      cerrarSesionLocal();
       throw error;
     }
   }
@@ -49,8 +53,7 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     function handleUnauthorized() {
-      setUsuario(null);
-      setStatus("unauthenticated");
+      cerrarSesionLocal();
     }
 
     window.addEventListener(
@@ -72,6 +75,7 @@ export function AuthProvider({ children }) {
       status,
       setUsuario,
       refrescarUsuario,
+      cerrarSesionLocal,
     }),
     [usuario, status]
   );

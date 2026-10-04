@@ -193,6 +193,7 @@ function normalizarBom(item) {
 export default function AdminPage() {
   const [tabActiva, setTabActiva] = useState("insumos");
   const [busqueda, setBusqueda] = useState("");
+  const [ultimaBusqueda, setUltimaBusqueda] = useState("");
   const [busquedaEjecutada, setBusquedaEjecutada] = useState(false);
 
   const [items, setItems] = useState([]);
@@ -220,6 +221,7 @@ export default function AdminPage() {
   function cambiarTab(tabId) {
     setTabActiva(tabId);
     setBusqueda("");
+    setUltimaBusqueda("");
     setBusquedaEjecutada(false);
     setItems([]);
     setMensaje("");
@@ -251,6 +253,9 @@ export default function AdminPage() {
       return;
     }
 
+    setUltimaBusqueda(texto);
+    setBusqueda("");
+
     try {
       setLoading(true);
 
@@ -281,9 +286,9 @@ export default function AdminPage() {
   }
 
   async function refrescarBusquedaActual() {
-    if (!busquedaEjecutada || !busqueda.trim()) return;
+    if (!busquedaEjecutada || !ultimaBusqueda.trim()) return;
 
-    const texto = busqueda.trim();
+    const texto = ultimaBusqueda.trim();
 
     if (tabActiva === "insumos") {
       const data = await buscarInsumosRequest(texto);
@@ -308,6 +313,7 @@ export default function AdminPage() {
 
   function limpiarBusqueda() {
     setBusqueda("");
+    setUltimaBusqueda("");
     setBusquedaEjecutada(false);
     setItems([]);
     setMensaje("");
@@ -456,8 +462,6 @@ export default function AdminPage() {
       );
     } finally {
       setImportando(false);
-      setModalAccion(null);
-      setArchivoImportacion(null);
     }
   }
 
@@ -945,13 +949,15 @@ export default function AdminPage() {
             </button>
           )}
 
-          <button
-            type="button"
-            className="admin-bulk-actions__update"
-            onClick={abrirActualizacion}
-          >
-            {TAB_COPY[tabActiva].update}
-          </button>
+          {["insumos", "lineas", "bom"].includes(tabActiva) && (
+            <button
+              type="button"
+              className="admin-bulk-actions__update"
+              onClick={abrirActualizacion}
+            >
+              {TAB_COPY[tabActiva].update}
+            </button>
+          )}
 
           {["insumos", "lineas", "bom"].includes(tabActiva) && (
             <button
