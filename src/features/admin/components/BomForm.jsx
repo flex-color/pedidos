@@ -35,9 +35,9 @@ export default function BomForm({ formBom, cambiarCampoBom, modalAccion }) {
     const nombre = insumo.nombre || "";
 
     cambiarCampoBom("idInsumo", id);
-    cambiarCampoBom("insumoTexto", `${sku} - ${nombre}`);
+    cambiarCampoBom("insumoTexto", `ID ${id} · ${sku}${insumo.codigoProveedor ? " · " + insumo.codigoProveedor : ""} - ${nombre}`);
 
-    setBusquedaInsumo(`${sku} - ${nombre}`);
+    setBusquedaInsumo(`ID ${id} · ${sku}${insumo.codigoProveedor ? " · " + insumo.codigoProveedor : ""} - ${nombre}`);
     setResultados([]);
   }
 
@@ -88,6 +88,8 @@ export default function BomForm({ formBom, cambiarCampoBom, modalAccion }) {
                     <span>
                       ID: {id}
                       {insumo.sku ? ` · SKU: ${insumo.sku}` : ""}
+                      {insumo.codigoProveedor ? ` · Prov.: ${insumo.codigoProveedor}` : ""}
+                      {insumo.activo === false ? " · INACTIVO" : ""}
                       {insumo.unidad ? ` · Unidad: ${insumo.unidad}` : ""}
                     </span>
                   </button>

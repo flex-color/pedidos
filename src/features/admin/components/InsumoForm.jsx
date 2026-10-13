@@ -17,6 +17,13 @@ export default function InsumoForm({
       </label>
 
       <label className="admin-search">
+        <span>Código de proveedor (opcional)</span>
+        <input type="text" value={formInsumo.codigoProveedor ?? ""}
+          onChange={(event) => cambiarCampoInsumo("codigoProveedor", event.target.value)}
+          placeholder="Ej: 0-181-CA-00300" />
+      </label>
+
+      <label className="admin-search">
         <span>Nombre</span>
         <input
           type="text"

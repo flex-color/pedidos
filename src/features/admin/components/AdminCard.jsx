@@ -19,7 +19,8 @@ export default function AdminCard({
 
             {tabActiva === "insumos" && (
               <p>
-                SKU: {item.sku}
+                ID: {item.id} · SKU: {item.sku}
+                {item.codigoProveedor ? ` · Prov.: ${item.codigoProveedor}` : ""}
                 {item.unidad ? ` · Unidad: ${item.unidad}` : ""}
               </p>
             )}
