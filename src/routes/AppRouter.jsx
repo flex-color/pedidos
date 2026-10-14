@@ -34,8 +34,12 @@ export default function AppRouter() {
         <Route element={<AppLayout />}>
           <Route path="/" element={<InicioProtegido />} />
 
-          <Route element={<SectorRoute sectoresPermitidos={["ARMADOR"]} />}>
+          <Route element={<SectorRoute sectoresPermitidos={["CREADOR"]} />}>
             <Route path={ROUTES.CREAR} element={<CrearPage />} />
+            <Route path={ROUTES.CONTROL_LINEA} element={<ControlEnLineaPage />} />
+          </Route>
+
+          <Route element={<SectorRoute sectoresPermitidos={["ARMADOR"]} />}>
             <Route path={ROUTES.ARMAR} element={<ArmarPage />} />
           </Route>
 
@@ -44,7 +48,6 @@ export default function AppRouter() {
               path={ROUTES.SALIDA_DEPOSITO}
               element={<RevisionSalidaDepositoPage />}
             />
-            <Route path={ROUTES.CONTROL_LINEA} element={<ControlEnLineaPage />} />
           </Route>
 
           <Route element={<SectorRoute sectoresPermitidos={["EXPORTADOR"]} />}>

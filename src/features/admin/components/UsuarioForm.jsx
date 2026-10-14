@@ -73,6 +73,7 @@ export default function UsuarioForm({
             )
           }
         >
+          <option value="CREADOR">CREADOR</option>
           <option value="ARMADOR">
             ARMADOR
           </option>
@@ -85,9 +86,6 @@ export default function UsuarioForm({
             EXPORTADOR
           </option>
 
-          <option value="TODO">
-            TODO
-          </option>
         </select>
       </label>
 

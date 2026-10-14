@@ -7,14 +7,14 @@ export function rutaInicialParaUsuario(usuario) {
   if (usuario.rol === "ADMIN") return ROUTES.CREAR;
 
   switch (usuario.sector) {
-    case "ARMADOR":
+    case "CREADOR":
       return ROUTES.CREAR;
+    case "ARMADOR":
+      return ROUTES.ARMAR;
     case "VALIDADOR":
       return ROUTES.SALIDA_DEPOSITO;
     case "EXPORTADOR":
       return ROUTES.EXPORTAR;
-    case "TODO":
-      return ROUTES.CREAR;
     default:
       return ROUTES.HISTORIAL;
   }
@@ -23,7 +23,6 @@ export function rutaInicialParaUsuario(usuario) {
 export function puedeAccederSector(usuario, sectoresPermitidos) {
   if (!usuario) return false;
   if (usuario.rol === "ADMIN") return true;
-  if (usuario.sector === "TODO") return true;
   return sectoresPermitidos.includes(usuario.sector);
 }
 

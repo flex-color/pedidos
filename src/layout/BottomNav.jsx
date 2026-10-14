@@ -5,7 +5,7 @@ import { puedeAccederSector } from "../routes/SectorRoute";
 import "./BottomNav.css";
 
 const navItems = [
-  { to: ROUTES.CREAR, label: "Crear", icon: "＋", sectores: ["ARMADOR"] },
+  { to: ROUTES.CREAR, label: "Crear", icon: "＋", sectores: ["CREADOR"] },
   { to: ROUTES.ARMAR, label: "Armar", icon: "▣", sectores: ["ARMADOR"] },
   {
     to: ROUTES.SALIDA_DEPOSITO,
@@ -17,7 +17,7 @@ const navItems = [
     to: ROUTES.CONTROL_LINEA,
     label: "Control línea",
     icon: "◎",
-    sectores: ["VALIDADOR"],
+    sectores: ["CREADOR"],
   },
   { to: ROUTES.EXPORTAR, label: "Exportar", icon: "↧", sectores: ["EXPORTADOR"] },
   { to: ROUTES.HISTORIAL, label: "Historial", icon: "◷", sectores: null },

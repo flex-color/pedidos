@@ -98,7 +98,6 @@ const TAB_COPY = {
 const FORM_INSUMO_INICIAL = {
   id: null,
   sku: "",
-  codigoProveedor: "",
   nombre: "",
   descripcion: "",
   unidad: "",
@@ -124,7 +123,7 @@ const FORM_USUARIO_INICIAL = {
   username: "",
   password: "",
   rol: "USER",
-  sector: "TODO",
+  sector: "CREADOR",
   celular: "",
   activo: true,
 };
@@ -140,7 +139,6 @@ function normalizarInsumo(insumo) {
     id: insumo.idInsumo ?? insumo.id_insumo ?? insumo.id,
     tipo: "insumo",
     sku: insumo.sku || "",
-    codigoProveedor: insumo.codigoProveedor ?? insumo.codigo_proveedor ?? "",
     nombre: insumo.nombre || "",
     descripcion: insumo.descripcion || "",
     unidad: insumo.unidad || "",
@@ -475,7 +473,6 @@ export default function AdminPage() {
       setFormInsumo({
         id: item.id,
         sku: item.sku || "",
-        codigoProveedor: item.codigoProveedor ?? "",
         nombre: item.nombre || "",
         descripcion: item.descripcion || "",
         unidad: item.unidad || "",
@@ -632,12 +629,12 @@ export default function AdminPage() {
       }
 
       if (
-        !["ARMADOR", "VALIDADOR", "EXPORTADOR", "TODO"].includes(
+        !["CREADOR", "ARMADOR", "VALIDADOR", "EXPORTADOR"].includes(
           formUsuario.sector
         )
       ) {
         setError(
-          "El sector debe ser ARMADOR, VALIDADOR, EXPORTADOR o TODO."
+          "El sector debe ser CREADOR, ARMADOR, VALIDADOR o EXPORTADOR."
         );
         return false;
       }
@@ -678,7 +675,6 @@ export default function AdminPage() {
       if (tabActiva === "insumos") {
         const payload = {
           sku: formInsumo.sku.trim(),
-          codigoProveedor: formInsumo.codigoProveedor.trim() || null,
           nombre: formInsumo.nombre.trim(),
           descripcion: formInsumo.descripcion.trim(),
           unidad: formInsumo.unidad.trim(),
