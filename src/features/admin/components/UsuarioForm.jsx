@@ -85,6 +85,7 @@ export default function UsuarioForm({
           <option value="EXPORTADOR">
             EXPORTADOR
           </option>
+          <option value="TODO">TODO</option>
 
         </select>
       </label>

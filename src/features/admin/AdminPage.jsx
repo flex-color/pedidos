@@ -657,12 +657,12 @@ export default function AdminPage() {
       }
 
       if (
-        !["CREADOR", "ARMADOR", "VALIDADOR", "EXPORTADOR"].includes(
+        !["CREADOR", "ARMADOR", "VALIDADOR", "EXPORTADOR", "TODO"].includes(
           formUsuario.sector
         )
       ) {
         setError(
-          "El sector debe ser CREADOR, ARMADOR, VALIDADOR o EXPORTADOR."
+          "El sector debe ser CREADOR, ARMADOR, VALIDADOR, EXPORTADOR o TODO."
         );
         return false;
       }
@@ -1021,7 +1021,7 @@ export default function AdminPage() {
                 <thead>
                   <tr>
                     <th>Usuario</th><th>Rol</th><th>Sector</th>
-                    <th>Celular</th><th>Estado</th><th>Acciones</th>
+                    <th>Estado</th><th>Acciones</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -1030,7 +1030,6 @@ export default function AdminPage() {
                       <td>{item.username}</td>
                       <td>{item.rol}</td>
                       <td>{item.sector}</td>
-                      <td>{item.celular || "—"}</td>
                       <td>{item.activo ? "Activo" : "Inactivo"}</td>
                       <td className="admin-users-table__actions">
                         <button type="button" onClick={() => abrirEditar(item)}>Editar</button>

@@ -7,6 +7,7 @@ export function rutaInicialParaUsuario(usuario) {
   if (usuario.rol === "ADMIN") return ROUTES.CREAR;
 
   switch (usuario.sector) {
+    case "TODO":
     case "CREADOR":
       return ROUTES.CREAR;
     case "ARMADOR":
@@ -23,6 +24,7 @@ export function rutaInicialParaUsuario(usuario) {
 export function puedeAccederSector(usuario, sectoresPermitidos) {
   if (!usuario) return false;
   if (usuario.rol === "ADMIN") return true;
+  if (usuario.sector === "TODO") return true;
   return sectoresPermitidos.includes(usuario.sector);
 }
 
