@@ -825,3 +825,12 @@
   font-size: 12px;
   font-weight: 850;
 }
+
+/* Listado completo de usuarios, sin credenciales */
+.admin-users-table-scroll { width: 100%; overflow-x: auto; }
+.admin-users-table { width: 100%; border-collapse: collapse; text-align: left; font-size: 14px; }
+.admin-users-table th, .admin-users-table td { padding: 12px; border-bottom: 1px solid var(--color-border); white-space: nowrap; }
+.admin-users-table th { color: var(--color-text-muted); font-weight: 800; background: var(--color-surface-soft); }
+.admin-users-table__actions { display: flex; gap: 8px; }
+.admin-users-table__actions button { cursor: pointer; padding: 8px 10px; border: 1px solid var(--color-border); border-radius: 9px; background: white; }
+.admin-users-table__count { margin: 12px 0 0; color: var(--color-text-muted); font-size: 13px; }

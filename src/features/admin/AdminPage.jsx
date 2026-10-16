@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   actualizarInsumoRequest,
   borrarInsumoRequest,
@@ -74,7 +74,7 @@ const TAB_COPY = {
     search: "Buscar usuario",
     create: "Crear usuario",
     update: "Cargar actualización",
-    empty: "Buscá un usuario para verlo.",
+    empty: "Cargando listado de usuarios...",
     notFound: "No encontramos usuarios con esa búsqueda.",
   },
   bom: {
@@ -218,6 +218,27 @@ export default function AdminPage() {
   const [bomItems, setBomItems] = useState([]);
   const [loadingBom, setLoadingBom] = useState(false);
 
+  useEffect(() => {
+    if (tabActiva !== "usuarios") return;
+    let vigente = true;
+    setLoading(true);
+    setError("");
+    buscarUsuariosRequest("")
+      .then((data) => {
+        if (!vigente) return;
+        setItems((data || []).map(normalizarUsuario));
+        setBusquedaEjecutada(true);
+        setUltimaBusqueda("");
+      })
+      .catch((err) => {
+        if (vigente) setError(err.message || "No se pudo cargar el listado de usuarios.");
+      })
+      .finally(() => {
+        if (vigente) setLoading(false);
+      });
+    return () => { vigente = false; };
+  }, [tabActiva]);
+
   function cambiarTab(tabId) {
     setTabActiva(tabId);
     setBusqueda("");
@@ -248,7 +269,7 @@ export default function AdminPage() {
 
     const texto = busqueda.trim();
 
-    if (!texto || tabActiva === "pedidos") {
+    if ((!texto && tabActiva !== "usuarios") || tabActiva === "pedidos") {
       setItems([]);
       return;
     }
@@ -286,7 +307,7 @@ export default function AdminPage() {
   }
 
   async function refrescarBusquedaActual() {
-    if (!busquedaEjecutada || !ultimaBusqueda.trim()) return;
+    if (tabActiva !== "usuarios" && (!busquedaEjecutada || !ultimaBusqueda.trim())) return;
 
     const texto = ultimaBusqueda.trim();
 
@@ -318,6 +339,13 @@ export default function AdminPage() {
     setItems([]);
     setMensaje("");
     setError("");
+    if (tabActiva === "usuarios") {
+      setLoading(true);
+      buscarUsuariosRequest("")
+        .then((data) => { setItems((data || []).map(normalizarUsuario)); setBusquedaEjecutada(true); })
+        .catch((err) => setError(err.message || "No se pudo cargar el listado."))
+        .finally(() => setLoading(false));
+    }
     setLineaBomSeleccionada(null);
     setBomItems([]);
   }
@@ -987,7 +1015,34 @@ export default function AdminPage() {
             <div className="admin-empty">{TAB_COPY[tabActiva].notFound}</div>
           )}
 
-          {items.map((item) => (
+          {tabActiva === "usuarios" && !loading && items.length > 0 ? (
+            <div className="admin-users-table-scroll">
+              <table className="admin-users-table">
+                <thead>
+                  <tr>
+                    <th>Usuario</th><th>Rol</th><th>Sector</th>
+                    <th>Celular</th><th>Estado</th><th>Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {items.map((item) => (
+                    <tr key={item.id}>
+                      <td>{item.username}</td>
+                      <td>{item.rol}</td>
+                      <td>{item.sector}</td>
+                      <td>{item.celular || "—"}</td>
+                      <td>{item.activo ? "Activo" : "Inactivo"}</td>
+                      <td className="admin-users-table__actions">
+                        <button type="button" onClick={() => abrirEditar(item)}>Editar</button>
+                        <button type="button" onClick={() => abrirBorrar(item)}>Borrar</button>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+              <p className="admin-users-table__count">{items.length} usuario(s) en el listado</p>
+            </div>
+          ) : tabActiva !== "usuarios" ? items.map((item) => (
             <AdminCard
               key={item.id}
               item={item}
@@ -996,7 +1051,7 @@ export default function AdminPage() {
               onBorrar={abrirBorrar}
               onAdministrarBom={administrarBom}
             />
-          ))}
+          )) : null}
         </div>
 
         {tabActiva === "bom" && (
