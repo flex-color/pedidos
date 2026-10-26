@@ -98,6 +98,7 @@ const TAB_COPY = {
 const FORM_INSUMO_INICIAL = {
   id: null,
   sku: "",
+  codigoProveedor: "",
   nombre: "",
   descripcion: "",
   unidad: "",
@@ -139,6 +140,7 @@ function normalizarInsumo(insumo) {
     id: insumo.idInsumo ?? insumo.id_insumo ?? insumo.id,
     tipo: "insumo",
     sku: insumo.sku || "",
+    codigoProveedor: insumo.codigoProveedor ?? insumo.codigo_proveedor ?? "",
     nombre: insumo.nombre || "",
     descripcion: insumo.descripcion || "",
     unidad: insumo.unidad || "",
@@ -501,6 +503,7 @@ export default function AdminPage() {
       setFormInsumo({
         id: item.id,
         sku: item.sku || "",
+        codigoProveedor: item.codigoProveedor ?? "",
         nombre: item.nombre || "",
         descripcion: item.descripcion || "",
         unidad: item.unidad || "",
@@ -560,7 +563,11 @@ export default function AdminPage() {
   }
 
   function cambiarCampoInsumo(campo, valor) {
-    setFormInsumo((actual) => ({ ...actual, [campo]: valor }));
+    setFormInsumo((actual) => {
+      // La edición usa el ID del insumo; el SKU no se reasigna desde el modal.
+      if (campo === "sku" && actual.id != null) return actual;
+      return { ...actual, [campo]: valor };
+    });
   }
 
   function cambiarCampoLinea(campo, valor) {
@@ -703,6 +710,7 @@ export default function AdminPage() {
       if (tabActiva === "insumos") {
         const payload = {
           sku: formInsumo.sku.trim(),
+          codigoProveedor: formInsumo.codigoProveedor.trim() || null,
           nombre: formInsumo.nombre.trim(),
           descripcion: formInsumo.descripcion.trim(),
           unidad: formInsumo.unidad.trim(),
@@ -1042,14 +1050,23 @@ export default function AdminPage() {
               <p className="admin-users-table__count">{items.length} usuario(s) en el listado</p>
             </div>
           ) : tabActiva !== "usuarios" ? items.map((item) => (
-            <AdminCard
-              key={item.id}
-              item={item}
-              tabActiva={tabActiva}
-              onEditar={abrirEditar}
-              onBorrar={abrirBorrar}
-              onAdministrarBom={administrarBom}
-            />
+            <div key={item.id}>
+              <AdminCard
+                item={item}
+                tabActiva={tabActiva}
+                onEditar={abrirEditar}
+                onBorrar={abrirBorrar}
+                onAdministrarBom={administrarBom}
+              />
+              {tabActiva === "insumos" && (
+                <p style={{ margin: "5px 12px 0", fontSize: "13px", color: "var(--color-text-muted)" }}>
+                  <strong>SKU:</strong> {item.sku}
+                  {item.codigoProveedor?.trim() && (
+                    <> | <strong>Código de proveedor:</strong> {item.codigoProveedor}</>
+                  )}
+                </p>
+              )}
+            </div>
           )) : null}
         </div>
 

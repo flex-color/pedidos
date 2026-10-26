@@ -9,6 +9,8 @@ export default function InsumoForm({
         <input
           type="text"
           value={formInsumo.sku ?? ""}
+          disabled={formInsumo.id != null}
+          title={formInsumo.id != null ? "El SKU no puede modificarse al editar un insumo" : undefined}
           onChange={(event) =>
             cambiarCampoInsumo("sku", event.target.value)
           }
