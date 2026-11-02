@@ -228,12 +228,14 @@ export default function HistorialPage() {
                       <div>
                         <span>{insumo.sku || ""}{insumo.codigoProveedor ? ` | ${insumo.codigoProveedor}` : ""}</span>
                         <strong>{insumo.nombre || "Insumo"}</strong>
-                        <small>Solicitado: {insumo.cantidad ?? 0} {insumo.unidad || ""}</small>
-                        {(insumo.cantidadDinamicaSalDep != null || insumo.cantidadDinamicaControl != null) && (
-                          <div className="historial-modal__dynamic-counts">
-                            <small>Rollos entregados — Salida depósito: {insumo.cantidadDinamicaSalDep ?? "Sin registrar"}</small>
-                            <small>Rollos entregados — Control en línea: {insumo.cantidadDinamicaControl ?? "Sin registrar"}</small>
+                        {insumo.variable === true ? (
+                          <div className="historial-modal__counts-inline">
+                            <small>Solicitado: <strong>{insumo.cantidad ?? 0}</strong> {insumo.unidad || ""}</small>
+                            <small>Salida depósito: <strong>{insumo.cantidadDinamicaSalDep ?? "—"}</strong></small>
+                            <small>Control línea: <strong>{insumo.cantidadDinamicaControl ?? "—"}</strong></small>
                           </div>
+                        ) : (
+                          <small>Solicitado: {insumo.cantidad ?? 0} {insumo.unidad || ""}</small>
                         )}
                       </div>
                       <b>{insumo.cantidad ?? 0}</b>

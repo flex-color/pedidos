@@ -352,15 +352,22 @@
   font-weight: 750;
 }
 
-/* Cantidades dinámicas: únicamente en detalle del historial. */
-.historial-modal__dynamic-counts {
-  margin-top: 8px;
-  padding: 8px 10px;
-  border-left: 3px solid #7A1F32;
-  background: #f8fafc;
-  border-radius: 8px;
+/* Tres cantidades en una línea compacta (con wrap en móviles). */
+.historial-modal__counts-inline {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 12px;
+  margin-top: 4px;
 }
-.historial-modal__dynamic-counts small {
-  display: block;
-  margin-top: 3px;
+.historial-modal__counts-inline small {
+  display: inline;
+  margin: 0;
+  font-size: 12px;
+  white-space: nowrap;
+}
+.historial-modal__counts-inline small strong {
+  display: inline;
+  font-size: inherit;
+  color: #334155;
 }
