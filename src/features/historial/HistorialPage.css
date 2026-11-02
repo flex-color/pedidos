@@ -351,3 +351,16 @@
   font-size: 12px;
   font-weight: 750;
 }
+
+/* Cantidades dinámicas: únicamente en detalle del historial. */
+.historial-modal__dynamic-counts {
+  margin-top: 8px;
+  padding: 8px 10px;
+  border-left: 3px solid #7A1F32;
+  background: #f8fafc;
+  border-radius: 8px;
+}
+.historial-modal__dynamic-counts small {
+  display: block;
+  margin-top: 3px;
+}
