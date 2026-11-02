@@ -238,7 +238,9 @@ export default function HistorialPage() {
                           <small>Solicitado: {insumo.cantidad ?? 0} {insumo.unidad || ""}</small>
                         )}
                       </div>
-                      <b>{insumo.cantidad ?? 0}</b>
+                      <b>{insumo.variable === true
+                        ? (insumo.cantidadDinamicaControl ?? insumo.cantidadDinamicaSalDep ?? insumo.cantidad ?? 0)
+                        : (insumo.cantidad ?? 0)}</b>
                     </article>
                   ))}
                 </div>
