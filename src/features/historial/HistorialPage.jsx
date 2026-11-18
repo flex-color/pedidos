@@ -4,38 +4,10 @@ import {
   getHistorialPedidosRequest,
   getPedidoDetalleRequest,
 } from "../../api/pedidosApi";
+import { formatearFechaHoraArgentina } from "../../utils/fechas";
 import "./HistorialPage.css";
 
-function formatearFecha(fecha) {
-  if (!fecha) return "-";
-
-  const valor = String(fecha).trim();
-
-  // Una fecha sin hora representa un día calendario: no se convierte.
-  if (/^\d{4}-\d{2}-\d{2}$/.test(valor)) {
-    const [anio, mes, dia] = valor.split("-");
-    return `${dia}/${mes}/${anio}`;
-  }
-
-  // La API guarda las fechas en UTC. Si el timestamp no trae zona,
-  // interpretamos UTC; si trae Z u offset, respetamos el indicado.
-  const fechaConZona = /(?:Z|[+-]\d{2}:?\d{2})$/i.test(valor)
-    ? valor
-    : `${valor.replace(" ", "T")}Z`;
-  const fechaObj = new Date(fechaConZona);
-
-  if (Number.isNaN(fechaObj.getTime())) return valor;
-
-  return new Intl.DateTimeFormat("es-AR", {
-    timeZone: "America/Argentina/Buenos_Aires",
-    day: "2-digit",
-    month: "2-digit",
-    year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-    hourCycle: "h23",
-  }).format(fechaObj).replace(",", "");
-}
+const formatearFecha = (fecha) => formatearFechaHoraArgentina(fecha, "-");
 
 function estadoPedido(pedido) {
   if (pedido.cargaTrilay) return "Exportado";

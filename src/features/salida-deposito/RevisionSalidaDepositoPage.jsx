@@ -3,29 +3,15 @@ import {
   getPedidosPendientesSalidaDepositoRequest,
   guardarSalidaDepositoRequest,
 } from "../../api/pedidosApi";
+import { formatearFechaArgentina, formatearFechaHoraArgentina } from "../../utils/fechas";
 import "../validacion/ValidacionPage.css";
 
 function keyItem(pedidoId, insumoId) {
   return `${pedidoId}-${insumoId}`;
 }
 
-function formatearFecha(fecha) {
-  if (!fecha) return "";
-  const valor = String(fecha);
-  const match = valor.match(/^(\d{4})-(\d{2})-(\d{2})/);
-  if (!match) return valor;
-  const [, anio, mes, dia] = match;
-  return `${dia}/${mes}/${anio}`;
-}
-
-function formatearFechaHora(fecha) {
-  if (!fecha) return "";
-  const valor = String(fecha);
-  const match = valor.match(/^(\d{4})-(\d{2})-(\d{2})(?:[T\s](\d{2}):(\d{2}))?/);
-  if (!match) return valor;
-  const [, anio, mes, dia, hora, minuto] = match;
-  return hora ? `${dia}/${mes}/${anio} ${hora}:${minuto}` : `${dia}/${mes}/${anio}`;
-}
+const formatearFecha = formatearFechaArgentina;
+const formatearFechaHora = formatearFechaHoraArgentina;
 
 function aNumero(valor, fallback = 0) {
   const n = Number(String(valor ?? "").replace(",", "."));

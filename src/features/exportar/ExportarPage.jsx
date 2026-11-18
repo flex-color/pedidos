@@ -6,6 +6,7 @@ import {
   getPedidosPendientesTrilayRequest,
   marcarPedidoCargaTrilayRequest,
 } from "../../api/pedidosApi";
+import { formatearFechaArgentina } from "../../utils/fechas";
 import "./ExportarPage.css";
 
 export default function ExportarPage() {
@@ -202,21 +203,7 @@ export default function ExportarPage() {
   }
 
   function formatearFechaVisual(fecha) {
-    if (!fecha) {
-      return "Sin fecha";
-    }
-  
-    const date = new Date(fecha);
-  
-    if (Number.isNaN(date.getTime())) {
-      return fecha;
-    }
-  
-    return date.toLocaleDateString("es-AR", {
-      day: "2-digit",
-      month: "2-digit",
-      year: "numeric",
-    });
+    return formatearFechaArgentina(fecha, "Sin fecha");
   }
 
   /*
