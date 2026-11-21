@@ -34,6 +34,7 @@ export default function CrearPage() {
   const [busqueda, setBusqueda] = useState("");
   const [cantidades, setCantidades] = useState({});
   const [numeroOp, setNumeroOp] = useState("");
+  const [usarOp, setUsarOp] = useState(false);
 
   const [modalAbierto, setModalAbierto] = useState(false);
   const [pedidoCreado, setPedidoCreado] = useState(false);
@@ -346,12 +347,13 @@ export default function CrearPage() {
 
       await crearPedidoRequest({
         lineaId: lineaSeleccionada.id,
-        numeroOp,
+        numeroOp: usarOp ? numeroOp.trim() : null,
         insumos: payload,
       });
 
       setCantidades({});
       setNumeroOp("");
+      setUsarOp(false);
       setBusqueda("");
       setModalAbierto(false);
       setPedidoCreado(true);
@@ -399,12 +401,7 @@ export default function CrearPage() {
         </div>
       )}
 
-      <label style={{ display: "flex", flexDirection: "column", gap: 6, maxWidth: 420, marginBottom: 16 }}>
-        <span>Número de OP (opcional)</span>
-        <input type="text" value={numeroOp} maxLength={100}
-          onChange={(event) => { setNumeroOp(event.target.value); setPedidoCreado(false); }}
-          placeholder="Ej: OP-2026-00125" style={{ width: "100%", padding: "10px 12px" }} />
-      </label>
+
 
       <div className="crear-layout">
         <aside
@@ -700,7 +697,38 @@ export default function CrearPage() {
               </strong>
             </div>
 
-            <div className="crear-modal__linea">OP: <strong>{numeroOp.trim() || "Sin asignar"}</strong></div>
+            <div className="crear-modal__op">
+              <label className="crear-modal__op-row">
+                <span className="crear-modal__op-label">Asignar OP</span>
+                <input
+                  type="checkbox"
+                  role="switch"
+                  checked={usarOp}
+                  onChange={(event) => {
+                    setUsarOp(event.target.checked);
+                    setErrorPedido("");
+                  }}
+                  className="crear-modal__op-toggle"
+                  aria-label="Asignar número de OP"
+                />
+              </label>
+              {usarOp && (
+                <label className="crear-modal__op-field">
+                  <span>Número de OP</span>
+                  <input
+                    type="text"
+                    value={numeroOp}
+                    maxLength={100}
+                    onChange={(event) => {
+                      setNumeroOp(event.target.value);
+                      setErrorPedido("");
+                    }}
+                    placeholder="Ej: OP-2026-00125"
+                    autoComplete="off"
+                  />
+                </label>
+              )}
+            </div>
 
             <div className="crear-modal__items">
               {insumosSeleccionados.map(
