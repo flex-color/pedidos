@@ -250,8 +250,8 @@ export default function RevisionSalidaDepositoPage() {
           <div className="revisar-sidebar__list">
             {pedidos.map((item) => (
               <button key={item.id} type="button" className={item.id === pedidoSeleccionadoId ? "revisar-sidebar__item is-active" : "revisar-sidebar__item"} onClick={() => { setPedidoSeleccionadoId(item.id); setMenuAbierto(false); setError(""); }}>
-                <span className="revisar-sidebar__main">{item.tieneParciales && <i />}<strong>{item.codigo}</strong><span>OP: {item.numeroOp || "Sin asignar"}</span></span>
-                <span className="revisar-sidebar__meta">{item.lineaNombre || "Sin línea"} - {formatearFecha(item.fechaArmado)}</span>
+                <span className="revisar-sidebar__main">{item.tieneParciales && <i />}<strong>{item.codigo}</strong>{item.numeroOp && <span className="revisar-sidebar__op" title={`OP: ${item.numeroOp}`}>OP: {item.numeroOp}</span>}</span>
+                <span className="revisar-sidebar__linea" title={item.lineaNombre || "Sin línea"}>{item.lineaNombre || "Sin línea"}</span><span className="revisar-sidebar__fecha">{formatearFecha(item.fechaArmado)}</span>
               </button>
             ))}
           </div>

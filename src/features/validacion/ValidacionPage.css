@@ -855,3 +855,47 @@
     margin-bottom: 22px;
   }
 }
+
+
+/* Tarjetas laterales: pedido destacado, OP compacta, línea y fecha separadas */
+.revisar-sidebar__main {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: nowrap;
+  gap: 8px;
+  min-width: 0;
+}
+.revisar-sidebar__main strong {
+  flex: 0 1 auto;
+  min-width: 0;
+}
+.revisar-sidebar__main .revisar-sidebar__op {
+  display: block;
+  flex: 1 1 auto;
+  min-width: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 12px;
+  font-weight: 500;
+  color: #7A1F32;
+}
+.revisar-sidebar__linea {
+  display: -webkit-box;
+  margin-top: 4px;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  color: #64748b;
+  font-size: 13px;
+  font-weight: 700;
+}
+.revisar-sidebar__fecha {
+  display: block;
+  margin-top: 5px;
+  color: #64748b;
+  font-size: 12px;
+  font-weight: 500;
+}
