@@ -7,13 +7,21 @@ import {
    PEDIDOS
    ========================================================= */
 
-export function crearPedidoRequest({ lineaId, insumos }) {
+export function crearPedidoRequest({ lineaId, numeroOp, insumos }) {
   return apiRequest("/api/pedidos", {
     method: "POST",
     body: JSON.stringify({
       lineaId,
+      numeroOp: numeroOp?.trim() || null,
       insumos,
     }),
+  });
+}
+
+export function actualizarNumeroOpRequest(pedidoId, numeroOp) {
+  return apiRequest(`/api/pedidos/${pedidoId}/op`, {
+    method: "PATCH",
+    body: JSON.stringify({ numeroOp: numeroOp?.trim() || null }),
   });
 }
 

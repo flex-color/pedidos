@@ -62,6 +62,7 @@ export default function ControlEnLineaPage() {
         const normalizados = (data || []).map((pedido) => ({
           id: pedido.id,
           codigo: pedido.codigo || `PEDIDO ${pedido.id}`,
+          numeroOp: pedido.numeroOp || "",
           lineaNombre: pedido.lineaNombre || "",
           fechaSalidaDeposito: pedido.fechaSalidaDeposito || "",
           tieneParciales: Boolean(pedido.tieneParciales) || (pedido.insumos || []).some((insumo) =>
@@ -180,10 +181,10 @@ export default function ControlEnLineaPage() {
       <header className="revisar-header"><div><p className="revisar-header__eyebrow">Validación</p><h1 className="revisar-header__title">Control en línea</h1></div><button type="button" className="revisar-header__menu-button" onClick={() => setMenuAbierto(true)}>Pedidos</button></header>
       {mensaje && <div className="revisar-success">{mensaje}</div>}{error && <div className="revisar-code__error">{error}</div>}
       <div className="revisar-layout">
-        <aside className={`revisar-sidebar ${menuAbierto ? "is-open" : ""}`}><div className="revisar-sidebar__header"><h2>Pedidos</h2><button type="button" className="revisar-sidebar__close" onClick={() => setMenuAbierto(false)}>×</button></div><div className="revisar-sidebar__list">{pedidos.map((item) => <button key={item.id} type="button" className={item.id === pedidoSeleccionadoId ? "revisar-sidebar__item is-active" : "revisar-sidebar__item"} onClick={() => { setPedidoSeleccionadoId(item.id); setMenuAbierto(false); setError(""); }}><span className="revisar-sidebar__main">{item.tieneParciales && <i />}<strong>{item.codigo}</strong></span><span className="revisar-sidebar__meta">{item.lineaNombre || "Sin línea"} - {formatearFecha(item.fechaSalidaDeposito)}</span></button>)}</div></aside>
+        <aside className={`revisar-sidebar ${menuAbierto ? "is-open" : ""}`}><div className="revisar-sidebar__header"><h2>Pedidos</h2><button type="button" className="revisar-sidebar__close" onClick={() => setMenuAbierto(false)}>×</button></div><div className="revisar-sidebar__list">{pedidos.map((item) => <button key={item.id} type="button" className={item.id === pedidoSeleccionadoId ? "revisar-sidebar__item is-active" : "revisar-sidebar__item"} onClick={() => { setPedidoSeleccionadoId(item.id); setMenuAbierto(false); setError(""); }}><span className="revisar-sidebar__main">{item.tieneParciales && <i />}<strong>{item.codigo}</strong><span>OP: {item.numeroOp || "Sin asignar"}</span></span><span className="revisar-sidebar__meta">{item.lineaNombre || "Sin línea"} - {formatearFecha(item.fechaSalidaDeposito)}</span></button>)}</div></aside>
         {menuAbierto && <button type="button" className="revisar-overlay" onClick={() => setMenuAbierto(false)} aria-label="Cerrar menú" />}
         <main className="revisar-content">
-          <div className="revisar-content__top"><div><p className="revisar-content__label">{pedido.lineaNombre || "Sin línea"}</p><h2>{pedido.codigo}</h2><p className="revisar-content__time">Salida depósito: {formatearFechaHora(pedido.fechaSalidaDeposito)}</p></div>{pedido.tieneParciales && <span className="revisar-status is-partial">Parcial</span>}</div>
+          <div className="revisar-content__top"><div><p className="revisar-content__label">{pedido.lineaNombre || "Sin línea"}</p><h2>{pedido.codigo}</h2><p>OP: {pedido.numeroOp || "Sin asignar"}</p><p className="revisar-content__time">Salida depósito: {formatearFechaHora(pedido.fechaSalidaDeposito)}</p></div>{pedido.tieneParciales && <span className="revisar-status is-partial">Parcial</span>}</div>
           <section className="revisar-insumos">
             {pedido.insumos.map((insumo) => {
               const e = estadoDe(insumo);

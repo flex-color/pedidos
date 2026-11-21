@@ -55,6 +55,7 @@ export default function ExportarPage() {
       const pedidosNormalizados = (data || []).map(
         (pedido) => ({
           id: pedido.id,
+          numeroOp: pedido.numeroOp || "",
 
           codigo:
             pedido.codigo ||
@@ -548,6 +549,7 @@ export default function ExportarPage() {
 
                 <div className="exportar-card__info">
                   <h3>{pedido.codigo}</h3>
+                  <p>OP: {pedido.numeroOp || "Sin asignar"}</p>
 
                   <div className="exportar-card__meta">
                     <span>

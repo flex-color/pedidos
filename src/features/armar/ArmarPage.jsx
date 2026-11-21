@@ -80,6 +80,7 @@ export default function ArmarPage() {
         const normalizados = (data || []).map((pedido) => ({
           id: pedido.id,
           codigo: pedido.codigo || `PEDIDO ${pedido.id}`,
+          numeroOp: pedido.numeroOp || "",
           fecha: pedido.fechaSolicitud || "",
           fechaInicioArmado: pedido.fechaInicioArmado || null,
           linea: pedido.lineaNombre || "",
@@ -328,6 +329,7 @@ export default function ArmarPage() {
             {pedidos.map((pedido) => (
               <button key={pedido.id} type="button" className={pedido.id === pedidoSeleccionadoId ? "armar-sidebar__item is-active" : "armar-sidebar__item"} onClick={() => seleccionarPedido(pedido.id)}>
                 <strong>{pedido.codigo}</strong>
+                <span>OP: {pedido.numeroOp || "Sin asignar"}</span>
                 <span>{pedido.linea || "Sin línea"} - {formatearFecha(pedido.fecha)}</span>
               </button>
             ))}
@@ -341,6 +343,7 @@ export default function ArmarPage() {
             <div>
               <p className="armar-content__label">{pedidoSeleccionado.linea || "Sin línea"}</p>
               <h2>{pedidoSeleccionado.codigo}</h2>
+              <p>OP: {pedidoSeleccionado.numeroOp || "Sin asignar"}</p>
               <p className="armar-content__time">Solicitud: {formatearFechaHora(pedidoSeleccionado.fecha)}</p>
             </div>
             <span className="armar-status">Pendiente</span>

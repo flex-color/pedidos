@@ -3,6 +3,7 @@ import {
   exportarTodosLosPedidosRequest,
   getHistorialPedidosRequest,
   getPedidoDetalleRequest,
+  actualizarNumeroOpRequest,
 } from "../../api/pedidosApi";
 import { formatearFechaHoraArgentina } from "../../utils/fechas";
 import "./HistorialPage.css";
@@ -21,6 +22,7 @@ function normalizarPedido(pedido) {
   return {
     id: pedido.id,
     codigo: pedido.codigo || `PEDIDO ${pedido.id}`,
+    numeroOp: pedido.numeroOp || "",
     lineaNombre: pedido.lineaNombre || "",
     fechaSolicitud: pedido.fechaSolicitud || "",
     fechaArmado: pedido.fechaArmado || "",
@@ -50,6 +52,9 @@ export default function HistorialPage() {
   const [busqueda, setBusqueda] = useState("");
   const [filtroTrilay, setFiltroTrilay] = useState("todos");
   const [pedidoDetalle, setPedidoDetalle] = useState(null);
+  const [numeroOpEdicion, setNumeroOpEdicion] = useState("");
+  const [guardandoOp, setGuardandoOp] = useState(false);
+  const [errorOp, setErrorOp] = useState("");
   const [loadingDetalle, setLoadingDetalle] = useState(false);
   const [errorDetalle, setErrorDetalle] = useState("");
 
@@ -92,6 +97,7 @@ export default function HistorialPage() {
     return pedidos.filter(
       (pedido) =>
         pedido.codigo.toLowerCase().includes(texto) ||
+        pedido.numeroOp.toLowerCase().includes(texto) ||
         pedido.lineaNombre.toLowerCase().includes(texto)
     );
   }, [pedidos, busqueda]);
@@ -102,11 +108,33 @@ export default function HistorialPage() {
       setLoadingDetalle(true);
       setErrorDetalle("");
       const data = await getPedidoDetalleRequest(pedido.id);
+      setNumeroOpEdicion(data?.pedido?.numeroOp ?? pedido.numeroOp ?? "");
+      setErrorOp("");
       setPedidoDetalle({ resumen: pedido, data });
     } catch (e) {
       setErrorDetalle(e.message || "No se pudo cargar el detalle del pedido.");
     } finally {
       setLoadingDetalle(false);
+    }
+  }
+
+  async function guardarNumeroOp() {
+    if (!pedidoDetalle) return;
+    try {
+      setGuardandoOp(true);
+      setErrorOp("");
+      const numeroOp = numeroOpEdicion.trim();
+      await actualizarNumeroOpRequest(pedidoDetalle.resumen.id, numeroOp);
+      setPedidos((prev) => prev.map((p) => p.id === pedidoDetalle.resumen.id ? {...p, numeroOp} : p));
+      setPedidoDetalle((prev) => prev ? {
+        ...prev,
+        resumen: {...prev.resumen, numeroOp},
+        data: prev.data ? {...prev.data, pedido: {...prev.data.pedido, numeroOp}} : null,
+      } : prev);
+    } catch (e) {
+      setErrorOp(e.message || "No se pudo guardar la OP.");
+    } finally {
+      setGuardandoOp(false);
     }
   }
 
@@ -148,7 +176,7 @@ export default function HistorialPage() {
       <section className="historial-filters">
         <label className="historial-filter">
           <span>Buscar por código o línea</span>
-          <input type="text" value={busqueda} onChange={(event) => { setBusqueda(event.target.value); setMensaje(""); }} placeholder="Ej: PEDIDO 1001 o Roller" />
+          <input type="text" value={busqueda} onChange={(event) => { setBusqueda(event.target.value); setMensaje(""); }} placeholder="Ej: OP-123, PEDIDO 1001 o Roller" />
         </label>
 
         <label className="historial-filter">
@@ -169,6 +197,7 @@ export default function HistorialPage() {
             <article key={pedido.id} className="historial-card">
               <div className="historial-card__info">
                 <h3>{pedido.codigo}</h3>
+                <small>OP: {pedido.numeroOp || "Sin asignar"}</small>
                 <div className="historial-card__meta">
                   {pedido.lineaNombre && <span>{pedido.lineaNombre}</span>}
                   <span>{formatearFecha(pedido.fechaSolicitud)}</span>
@@ -206,6 +235,15 @@ export default function HistorialPage() {
             {detalle && (
               <>
                 <div className="historial-modal__status">
+                  <label style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+                    <span>OP:</span>
+                    <input type="text" value={numeroOpEdicion} maxLength={100}
+                      onChange={(e) => setNumeroOpEdicion(e.target.value)}
+                      placeholder="Sin asignar" aria-label="Número de OP"
+                      style={{ minWidth: 160, padding: "6px 8px" }} />
+                    <button type="button" onClick={guardarNumeroOp} disabled={guardandoOp || numeroOpEdicion.trim() === (pedidoDetalleEntity?.numeroOp ?? "")}>{guardandoOp ? "Guardando..." : "Guardar OP"}</button>
+                    {errorOp && <small role="alert">{errorOp}</small>}
+                  </label>
                   <span>Línea: {pedidoDetalleEntity?.lineaNombre || "-"}</span>
                   <span>Creado por: {detalle.solicitadoPorUsername || "-"}</span>
                   <span>Estado actual: {estadoLegible(detalle.estadoActual)}</span>

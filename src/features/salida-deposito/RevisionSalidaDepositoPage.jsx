@@ -70,6 +70,7 @@ export default function RevisionSalidaDepositoPage() {
         const normalizados = (data || []).map((pedido) => ({
           id: pedido.id,
           codigo: pedido.codigo || `PEDIDO ${pedido.id}`,
+          numeroOp: pedido.numeroOp || "",
           lineaNombre: pedido.lineaNombre || "",
           fechaSolicitud: pedido.fechaSolicitud || "",
           fechaArmado: pedido.fechaArmado || "",
@@ -249,7 +250,7 @@ export default function RevisionSalidaDepositoPage() {
           <div className="revisar-sidebar__list">
             {pedidos.map((item) => (
               <button key={item.id} type="button" className={item.id === pedidoSeleccionadoId ? "revisar-sidebar__item is-active" : "revisar-sidebar__item"} onClick={() => { setPedidoSeleccionadoId(item.id); setMenuAbierto(false); setError(""); }}>
-                <span className="revisar-sidebar__main">{item.tieneParciales && <i />}<strong>{item.codigo}</strong></span>
+                <span className="revisar-sidebar__main">{item.tieneParciales && <i />}<strong>{item.codigo}</strong><span>OP: {item.numeroOp || "Sin asignar"}</span></span>
                 <span className="revisar-sidebar__meta">{item.lineaNombre || "Sin línea"} - {formatearFecha(item.fechaArmado)}</span>
               </button>
             ))}
@@ -262,6 +263,7 @@ export default function RevisionSalidaDepositoPage() {
             <div>
               <p className="revisar-content__label">{pedido.lineaNombre || "Sin línea"}</p>
               <h2>{pedido.codigo}</h2>
+              <p>OP: {pedido.numeroOp || "Sin asignar"}</p>
               <p className="revisar-content__time">Armado: {formatearFechaHora(pedido.fechaArmado)}</p>
             </div>
             {pedido.tieneParciales && <span className="revisar-status is-partial">Parcial</span>}

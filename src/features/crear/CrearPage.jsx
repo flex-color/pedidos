@@ -33,6 +33,7 @@ export default function CrearPage() {
   const [menuAbierto, setMenuAbierto] = useState(false);
   const [busqueda, setBusqueda] = useState("");
   const [cantidades, setCantidades] = useState({});
+  const [numeroOp, setNumeroOp] = useState("");
 
   const [modalAbierto, setModalAbierto] = useState(false);
   const [pedidoCreado, setPedidoCreado] = useState(false);
@@ -345,10 +346,12 @@ export default function CrearPage() {
 
       await crearPedidoRequest({
         lineaId: lineaSeleccionada.id,
+        numeroOp,
         insumos: payload,
       });
 
       setCantidades({});
+      setNumeroOp("");
       setBusqueda("");
       setModalAbierto(false);
       setPedidoCreado(true);
@@ -395,6 +398,13 @@ export default function CrearPage() {
           {errorLineas}
         </div>
       )}
+
+      <label style={{ display: "flex", flexDirection: "column", gap: 6, maxWidth: 420, marginBottom: 16 }}>
+        <span>Número de OP (opcional)</span>
+        <input type="text" value={numeroOp} maxLength={100}
+          onChange={(event) => { setNumeroOp(event.target.value); setPedidoCreado(false); }}
+          placeholder="Ej: OP-2026-00125" style={{ width: "100%", padding: "10px 12px" }} />
+      </label>
 
       <div className="crear-layout">
         <aside
@@ -689,6 +699,8 @@ export default function CrearPage() {
                 }
               </strong>
             </div>
+
+            <div className="crear-modal__linea">OP: <strong>{numeroOp.trim() || "Sin asignar"}</strong></div>
 
             <div className="crear-modal__items">
               {insumosSeleccionados.map(
