@@ -728,3 +728,16 @@
     margin-bottom: 20px;
   }
 }
+
+/* OP al costado del número de pedido, sin alterar el padding aprobado */
+.armar-sidebar__pedido-row { flex-wrap: nowrap; }
+.armar-sidebar__item .armar-sidebar__pedido-row .armar-sidebar__op {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 650;
+  color: #7a1f32;
+  margin-top: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
