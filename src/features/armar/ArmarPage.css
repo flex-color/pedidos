@@ -94,7 +94,10 @@
 .armar-sidebar__item {
   width: 100%;
   min-height: 58px;
-  padding: 11px 12px;
+  height: auto;
+  flex: 0 0 auto; /* No comprimir tarjetas con nombres de dos líneas */
+  box-sizing: border-box;
+  padding: 13px 14px 16px;
   border: 1px solid transparent;
   border-radius: 16px;
   background: transparent;
@@ -107,12 +110,54 @@
   font-size: 14px;
 }
 
+.armar-sidebar__pedido-row {
+  display: flex;
+  align-items: baseline;
+  gap: 9px;
+  min-width: 0;
+}
+
+.armar-sidebar__pedido-row strong {
+  flex: 0 0 auto;
+}
+
+.armar-sidebar__item .armar-sidebar__op {
+  display: inline-block;
+  flex: 1 1 auto;
+  min-width: 0;
+  margin-top: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #7A1F32;
+  font-size: 11px;
+  font-weight: 650;
+}
+
 .armar-sidebar__item span {
   display: block;
   margin-top: 3px;
   color: #64748b;
   font-size: 12px;
   font-weight: 750;
+}
+
+.armar-sidebar__item .armar-sidebar__linea {
+  display: -webkit-box;
+  overflow: hidden;
+  overflow-wrap: anywhere;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  line-height: 1.35;
+}
+
+.armar-sidebar__item .armar-sidebar__fecha {
+  margin-top: 5px;
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.3;
+  color: #64748b;
 }
 
 .armar-sidebar__item.is-active {
