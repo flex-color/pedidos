@@ -101,9 +101,29 @@
 }
 
 .historial-card__info h3 {
-  margin: 0 0 7px;
+  margin: 0;
   color: #0f172a;
   font-size: 15px;
+}
+
+.historial-card__heading {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  column-gap: 12px;
+  row-gap: 3px;
+  margin-bottom: 8px;
+}
+
+.historial-card__op {
+  max-width: min(100%, 260px);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: #7A1F32;
+  font-size: 12px;
+  font-weight: 650;
+  line-height: 1.35;
 }
 
 .historial-card__meta {
@@ -350,24 +370,4 @@
   color: #64748b;
   font-size: 12px;
   font-weight: 750;
-}
-
-/* Tres cantidades en una línea compacta (con wrap en móviles). */
-.historial-modal__counts-inline {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 4px 12px;
-  margin-top: 4px;
-}
-.historial-modal__counts-inline small {
-  display: inline;
-  margin: 0;
-  font-size: 12px;
-  white-space: nowrap;
-}
-.historial-modal__counts-inline small strong {
-  display: inline;
-  font-size: inherit;
-  color: #334155;
 }

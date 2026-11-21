@@ -196,8 +196,14 @@ export default function HistorialPage() {
           {pedidosFiltrados.map((pedido) => (
             <article key={pedido.id} className="historial-card">
               <div className="historial-card__info">
-                <h3>{pedido.codigo}</h3>
-                <small>OP: {pedido.numeroOp || "Sin asignar"}</small>
+                <div className="historial-card__heading">
+                  <h3>{pedido.codigo}</h3>
+                  {pedido.numeroOp && (
+                    <span className="historial-card__op" title={`OP: ${pedido.numeroOp}`}>
+                      OP: {pedido.numeroOp}
+                    </span>
+                  )}
+                </div>
                 <div className="historial-card__meta">
                   {pedido.lineaNombre && <span>{pedido.lineaNombre}</span>}
                   <span>{formatearFecha(pedido.fechaSolicitud)}</span>
